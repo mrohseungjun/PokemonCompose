@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.jakewharton.timber)
     implementation (libs.androidx.palette)
+    implementation(libs.coil.kt)
 
     implementation(libs.retrofit)
     implementation(libs.retrofit.logging.interceptor)

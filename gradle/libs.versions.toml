@@ -18,6 +18,7 @@ nav_version = "2.7.7"
 timber = "4.5.1"
 palette = "1.0.0"
 nav_hilt = "1.0.0"
+coil = "2.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +41,7 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 jakewharton-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 androidx-palette = { group = "androidx.palette", name = "palette", version.ref = "palette" }
+coil-kt = {group = "io.coil-kt", name = "coil-compose", version.ref = "coil"}
 
 
 
