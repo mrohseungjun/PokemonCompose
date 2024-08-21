@@ -10,7 +10,10 @@ import kr.co.project.pokemoncompose.data.remote.PokeApi
 import kr.co.project.pokemoncompose.repository.PokemonRepository
 import kr.co.project.pokemoncompose.utill.Constants
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import timber.log.BuildConfig
 import javax.inject.Singleton
 
 @Module
@@ -19,11 +22,29 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .apply {
+                if (BuildConfig.DEBUG) {
+                    this.addNetworkInterceptor(
+                        HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BODY
+                        },
+                    )
+                }
+            }
+            .build()
+    }
+
+    @Provides
+    @Singleton
     fun provideApiInstance(
-        json: Json
+        json: Json,
+        okHttpClient: OkHttpClient
     ): PokeApi {
         return Retrofit
             .Builder()
+            .client(okHttpClient)
             .baseUrl(Constants.BASE_URL)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()

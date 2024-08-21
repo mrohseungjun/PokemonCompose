@@ -1,5 +1,6 @@
 package kr.co.project.pokemoncompose.repository
 
+import android.util.Log
 import dagger.hilt.android.scopes.ActivityScoped
 import kr.co.project.pokemoncompose.data.remote.PokeApi
 import kr.co.project.pokemoncompose.data.remote.response.Pokemon
@@ -16,6 +17,7 @@ class PokemonRepository @Inject constructor(
         val response = try {
             api.getPokemonList(limit, offset)
         } catch (e: Exception) {
+            Log.d("test","Exception = ${e.message}")
             return Resource.Error("An unknown error occured.")
         }
         return Resource.Success(response)

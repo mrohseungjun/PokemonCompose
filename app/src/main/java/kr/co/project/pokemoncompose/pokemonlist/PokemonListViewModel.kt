@@ -3,6 +3,7 @@ package kr.co.project.pokemoncompose.pokemonlist
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.capitalize
@@ -15,6 +16,7 @@ import kr.co.project.pokemoncompose.data.model.PokedexListEntry
 import kr.co.project.pokemoncompose.repository.PokemonRepository
 import kr.co.project.pokemoncompose.utill.Constants
 import kr.co.project.pokemoncompose.utill.Resource
+import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
 
@@ -30,20 +32,29 @@ class PokemonListViewModel @Inject constructor(
     var isLoading = mutableStateOf(false)
     var endReached = mutableStateOf(false)
 
+    init {
+        loadPokemonPaginated()
+    }
+
     fun loadPokemonPaginated() {
+        Log.d("test","loadPokemonPaginated")
         viewModelScope.launch {
             val result = repository.getPokemonList(Constants.PAGE_SIZE, curPage * Constants.PAGE_SIZE)
+
             when (result) {
                 is Resource.Success -> {
                     endReached.value = curPage * Constants.PAGE_SIZE >= result.data!!.count
+
                     val pokedexEntries = result.data.results.mapIndexed { index, entry ->
                         val number = if (entry.url.endsWith("/")) {
                             entry.url.dropLast(1).takeLastWhile { it.isDigit() }
                         } else{
                             entry.url.takeLastWhile { it.isDigit() }
                         }
-                        val url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${number}.png"
-                        PokedexListEntry(entry.name.capitalize(Locale.ROOT), url, number.toInt())
+
+                        val url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/" +
+                                "pokemon/other/official-artwork/$number.png"
+                        PokedexListEntry(entry.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }, url, number.toInt())
                     }
                     curPage++
 
@@ -53,7 +64,11 @@ class PokemonListViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
+                    Log.d("test","Error")
+                    Log.d("test","error_message = ${result.message!!}")
 
+                    loadError.value = result.message!!
+                    isLoading.value = false
                 }
 
                 else -> {

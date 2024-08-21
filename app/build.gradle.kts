@@ -4,14 +4,15 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
-    namespace = "com.example.cardgame"
+    namespace = "kr.co.project.PokemonCompose"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.cardgame"
+        applicationId = "kr.co.project.PokemonCompose"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
